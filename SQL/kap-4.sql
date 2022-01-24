@@ -1,0 +1,141 @@
+/* Code-Beispiele für das Kapitel Daten verknüpfen */
+
+/* Anlegen der Tabelle Pruefung mit Fremdschlüsselspalten */
+CREATE TABLE pruefung (
+  teilnehmer    INTEGER NOT NULL,
+  pruefungsfach INTEGER NOT NULL,
+  note          DECIMAL(2,1) NOT NULL,
+  pruefung_am   DATE NOT NULL,
+  FOREIGN KEY (teilnehmer) REFERENCES student(student_id)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  FOREIGN KEY (pruefungsfach) REFERENCES fach(fach_id)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
+);
+
+/* Einfügen von zwei Zeilen */
+INSERT INTO pruefung 
+  (teilnehmer, pruefungsfach, pruefung_am, note)
+VALUES
+  (1,1,'2021-09-27', 4.5),
+  (5,1,'2021-09-27', 4.0)
+;
+
+/* Überprüfung */
+SELECT * FROM pruefung;
+
+/* Einfügen einer Zeile mit ungültigem Fach */
+INSERT INTO pruefung
+  (teilnehmer, pruefungsfach, pruefung_am, note)
+VALUES
+  (1,7777, '2021-09-27', 4.5)
+;
+
+/* Versuch, die Studentin mit der id 1 zu löschen */
+DELETE from student WHERE student_id = 1;
+
+/* Ändern einer Fach-ID von 1 auf 9 */
+UPDATE fach SET fach_id = 9 WHERE fach_id = 1;
+
+/* Prüfung, ob ON UPDATE CASCADE funktioniert hat */
+SELECT * FROM pruefung;
+
+/* SELECT mit JOIN */
+SELECT student.vorname, 
+       student.name, 
+       pruefung.pruefung_am, 
+       fach.name,
+       pruefung.note
+FROM   pruefung 
+       JOIN student ON pruefung.teilnehmer = student.student_id
+       JOIN fach ON pruefung.pruefungsfach = fach.fach_id;
+     
+       
+/* Kap. 4.3.4 Aufgabe 1 */
+SELECT s.name, s.email
+FROM student s JOIN klasse k ON s.klasse = k.klasse_id
+WHERE k.bezeichnung = 'HFSNT.SG.H20';
+
+/* Kap. 4.3.4 Aufgabe 2 */
+SELECT r.bezeichnung, r.kapazitaet
+FROM raum r JOIN standort s ON r.standort = s.standort_id
+WHERE s.name = 'Zürich 1';
+
+/* Kap. 4.3.4 Aufgabe 3 */
+SELECT s.name, a.strasse, a.nr, a.plz, a.ort
+FROM student s JOIN adresse a ON s.adresse = a.adresse_id
+WHERE a.ort = 'St. Gallen';
+
+/* Kap. 4.3.4 Aufgabe 4 */
+SELECT s.name Standort, r.bezeichnung Raum , lv.titel Veranstaltung, lv.beginn Von, lv.ende Bis   
+FROM lehrveranstaltung lv 
+  JOIN  raum r ON lv.raum = r.raum_id                          
+  JOIN  standort s ON r.standort = s.standort_id 
+WHERE s.name = 'Bern 1' AND lv.beginn BETWEEN '2022-01-24 13:00:00' AND '2022-01-24 17:30:00';
+
+/* Kap. 4.3.4 Aufgabe 5 */
+SELECT s.name Standort, r.bezeichnung Raum , f.titel Fach, lv.beginn Von, lv.ende Bis   
+FROM lehrveranstaltung lv 
+  JOIN  raum r ON lv.raum = r.raum_id                          
+  JOIN  fach f ON f.fach_id = lv.fach
+  JOIN  standort s ON r.standort = s.standort_id 
+WHERE s.name = 'Bern 1' AND lv.beginn BETWEEN '2022-01-24 13:00:00' AND '2022-01-24 17:30:00';
+
+/* Kap. 4.3.4 Aufgabe 6 */
+SELECT d.name Name, lv.titel Veranstaltung , s.name Standort, r.bezeichnung Raum , lv.beginn, lv.ende 
+FROM raum r JOIN lehrveranstaltung lv ON r.raum_id = lv.raum 
+            JOIN standort s ON s.standort_id = r.standort
+            JOIN dozent d ON d.dozent_id = lv.dozent
+ORDER BY d.name, lv.beginn;
+
+/* Kap. 4.3.4 Aufgabe 7 */
+SELECT lv.beginn Beginn, lv.ende Ende , s.name Standort, r.bezeichnung Raum, lv.titel Veranstaltung, f.titel Fach
+FROM lehrveranstaltung lv JOIN klasse k ON lv.klasse = k.klasse_id
+                          JOIN raum r ON r.raum_id = lv.raum
+                          JOIN standort s ON s.standort_id = r.standort
+                          JOIN fach f ON f.fach_id = lv.fach
+WHERE k.bezeichnung = 'HFSNT.ZH.H20'
+ORDER BY lv.beginn;
+
+/* Kap 4.4 INNER und OUTER JOIN */
+SELECT k.bezeichnung, lv.titel, d.name
+FROM klasse k JOIN lehrveranstaltung lv ON lv.klasse = k.klasse_id
+              JOIN dozent d ON lv.dozent = d.dozent_id
+WHERE lv.titel = 'ITAR 1';
+
+/* Kap 4.4 LEFT JOIN findet auch Veranstaltungen ohne Dozent */
+SELECT k.bezeichnung, lv.titel, d.name
+FROM klasse k JOIN lehrveranstaltung lv ON lv.klasse = k.klasse_id
+              LEFT JOIN dozent d ON lv.dozent = d.dozent_id
+WHERE lv.titel = 'ITAR 1';
+
+/* RIGHT JOIN findet auch Veranstaltungen ohne Dozent 
+   wenn die Reihenfolge der Tabellen umgestellt wird */
+SELECT k.bezeichnung, lv.titel, d.name
+FROM dozent d RIGHT JOIN lehrveranstaltung lv ON d.dozent_id = lv.dozent
+              JOIN  klasse k ON lv.klasse = k.klasse_id
+WHERE lv.titel = 'ITAR 1';
+
+/* Self JOIN, um überlappende Zeiten zu finden */
+SELECT lv1.titel, lv1.klasse, lv1.dozent, lv1.beginn, lv2.titel,  lv2.klasse, lv2.dozent, lv2.beginn
+FROM lehrveranstaltung lv1 join lehrveranstaltung lv2 on lv1.beginn = lv2.beginn and lv1.dozent = lv2.dozent and lv1.klasse != lv2.klasse;
+
+/* Stundenplan mit Lehrveranstaltungen und Prüfungsterminen für 
+die Klasse HFSNT.ZH.H20 */
+SELECT titel, beginn 
+FROM lehrveranstaltung l JOIN klasse k ON l.klasse = k.klasse_id 
+WHERE k.bezeichnung = 'HFSNT.ZH.H20' AND beginn > '2022-01-01'
+UNION 
+SELECT titel, beginn 
+FROM pruefung p 
+JOIN student s ON p.student = s.student_id 
+JOIN klasse k ON k.klasse_id = s.klasse 
+WHERE k.bezeichnung = 'HFSNT.ZH.H20' AND beginn > '2022-01-01'
+ORDER BY beginn;
+
+/* Stundenplan einer Studentin, mit UNION */
+
+/* Freie Räume finden, mit Subquery */
+
+
