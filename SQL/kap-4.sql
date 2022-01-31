@@ -41,7 +41,7 @@ UPDATE fach SET fach_id = 9 WHERE fach_id = 1;
 /* Prüfung, ob ON UPDATE CASCADE funktioniert hat */
 SELECT * FROM pruefung;
 
-/* SELECT mit JOIN */
+/* Kap  4.3.1 SELECT mit JOIN */
 SELECT student.vorname, 
        student.name, 
        pruefung.pruefung_am, 
@@ -107,34 +107,41 @@ WHERE lv.titel = 'ITAR 1';
 /* Kap 4.4 LEFT JOIN findet auch Veranstaltungen ohne Dozent */
 SELECT k.bezeichnung, lv.titel, d.name
 FROM klasse k JOIN lehrveranstaltung lv ON lv.klasse = k.klasse_id
-              LEFT JOIN dozent d ON lv.dozent = d.dozent_id
-WHERE lv.titel = 'ITAR 1';
+              RIGHT JOIN dozent d ON lv.dozent = d.dozent_id
+WHERE lv.titel = 'ITAR1';
 
-/* RIGHT JOIN findet auch Veranstaltungen ohne Dozent 
+/* Kap 4.4 RIGHT JOIN findet auch Veranstaltungen ohne Dozent 
    wenn die Reihenfolge der Tabellen umgestellt wird */
 SELECT k.bezeichnung, lv.titel, d.name
-FROM dozent d RIGHT JOIN lehrveranstaltung lv ON d.dozent_id = lv.dozent
+FROM dozent d LEFT JOIN lehrveranstaltung lv ON d.dozent_id = lv.dozent
               JOIN  klasse k ON lv.klasse = k.klasse_id
-WHERE lv.titel = 'ITAR 1';
+WHERE lv.titel = 'ITAR1';
 
-/* Self JOIN, um überlappende Zeiten zu finden */
-SELECT lv1.titel, lv1.klasse, lv1.dozent, lv1.beginn, lv2.titel,  lv2.klasse, lv2.dozent, lv2.beginn
-FROM lehrveranstaltung lv1 join lehrveranstaltung lv2 on lv1.beginn = lv2.beginn and lv1.dozent = lv2.dozent and lv1.klasse != lv2.klasse;
 
-/* Stundenplan mit Lehrveranstaltungen und Prüfungsterminen für 
-die Klasse HFSNT.ZH.H20 */
-SELECT titel, beginn 
+
+/* Self JOIN, um mehrfach vergebene Räume zu finden */
+SELECT lv1.titel, lv1.klasse, lv1.raum, lv1.dozent, lv1.beginn, lv2.titel,  lv2.klasse, lv2.raum, lv2.dozent, lv2.beginn
+FROM lehrveranstaltung lv1 join lehrveranstaltung lv2 ON lv1.beginn = lv2.beginn AND lv1.raum = lv2.raum AND lv1.klasse != lv2.klasse;
+
+/* Self JOIN, um doppelt gebuchte Dozenten zu finden */
+SELECT lv1.titel, lv1.klasse, lv1.raum, lv1.dozent, lv1.beginn, lv2.titel,  lv2.klasse, lv2.raum, lv2.dozent, lv2.beginn
+FROM lehrveranstaltung lv1 join lehrveranstaltung lv2 ON lv1.beginn = lv2.beginn AND lv1.dozent = lv2.dozent AND lv1.klasse != lv2.klasse;
+
+/* Kap. 4.7 Aufgabe 1 - Stundenplan mit Lehrveranstaltungen und Prüfungsterminen für 
+die Studentin Hanna Wirz*/
+SELECT l.titel, l.beginn, l.ende , sta.name 'Standort', r.bezeichnung 'Raum'
 FROM lehrveranstaltung l JOIN klasse k ON l.klasse = k.klasse_id 
-WHERE k.bezeichnung = 'HFSNT.ZH.H20' AND beginn > '2022-01-01'
+                                          JOIN student s ON s.klasse = k.klasse_id
+                                          JOIN raum r ON r.raum_id = l.raum
+                                          JOIN standort sta ON sta.standort_id = r.standort
+WHERE s.name = 'Hanna Wirz'
 UNION 
-SELECT titel, beginn 
-FROM pruefung p 
-JOIN student s ON p.student = s.student_id 
-JOIN klasse k ON k.klasse_id = s.klasse 
-WHERE k.bezeichnung = 'HFSNT.ZH.H20' AND beginn > '2022-01-01'
+SELECT p.titel, p.beginn, p.ende, sta.name 'Standort', r.bezeichnung 'Raum'
+FROM pruefung p JOIN student s ON p.student = s.student_id 
+                              JOIN raum r ON r.raum_id = p.raum
+							  JOIN standort sta ON sta.standort_id = r.standort
+WHERE s.name = 'Hanna Wirz'
 ORDER BY beginn;
-
-/* Stundenplan einer Studentin, mit UNION */
 
 /* Freie Räume finden, mit Subquery */
 
