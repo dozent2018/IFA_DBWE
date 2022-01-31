@@ -15,12 +15,12 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Table structure for table `adresse`
---
 
 CREATE DATABASE IF NOT EXISTS beispiele;
 USE beispiele;
+--
+-- Table structure for table `adresse`
+--
 
 DROP TABLE IF EXISTS `adresse`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
