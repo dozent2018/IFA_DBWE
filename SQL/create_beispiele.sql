@@ -19,6 +19,9 @@
 -- Table structure for table `adresse`
 --
 
+CREATE DATABASE IF NOT EXISTS beispiele;
+USE beispiele;
+
 DROP TABLE IF EXISTS `adresse`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
