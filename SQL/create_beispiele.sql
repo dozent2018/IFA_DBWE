@@ -15,6 +15,9 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+CREATE DATABASE IF NOT EXISTS beispiele;
+USE beispiele;
 --
 -- Table structure for table `adresse`
 --
@@ -29,7 +32,7 @@ CREATE TABLE `adresse` (
   `plz` char(4) NOT NULL,
   `ort` varchar(255) NOT NULL,
   PRIMARY KEY (`adresse_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=161 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -57,7 +60,7 @@ CREATE TABLE `dozent` (
   PRIMARY KEY (`dozent_id`),
   KEY `adresse` (`adresse`),
   CONSTRAINT `dozent_ibfk_1` FOREIGN KEY (`adresse`) REFERENCES `adresse` (`adresse_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,7 +84,7 @@ CREATE TABLE `fach` (
   `fach_id` int NOT NULL AUTO_INCREMENT,
   `titel` varchar(255) NOT NULL,
   PRIMARY KEY (`fach_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,7 +109,7 @@ CREATE TABLE `fach_alt` (
   `titel` char(80) NOT NULL,
   `semester` int DEFAULT NULL,
   PRIMARY KEY (`fach_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,7 +138,7 @@ CREATE TABLE `fach_pr` (
   `akt_sem` int DEFAULT NULL,
   `fach_pr_id` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`fach_pr_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,7 +163,7 @@ CREATE TABLE `klasse` (
   `bezeichnung` char(20) NOT NULL,
   `semester` int NOT NULL,
   PRIMARY KEY (`klasse_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +201,7 @@ CREATE TABLE `lehrveranstaltung` (
   CONSTRAINT `lehrveranstaltung_ibfk_2` FOREIGN KEY (`klasse`) REFERENCES `klasse` (`klasse_id`),
   CONSTRAINT `lehrveranstaltung_ibfk_3` FOREIGN KEY (`raum`) REFERENCES `raum` (`raum_id`),
   CONSTRAINT `lehrveranstaltung_ibfk_4` FOREIGN KEY (`dozent`) REFERENCES `dozent` (`dozent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=318 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -236,7 +239,7 @@ CREATE TABLE `mitarbeiter` (
   CONSTRAINT `mitarbeiter_ibfk_1` FOREIGN KEY (`standort`) REFERENCES `standort` (`standort_id`),
   CONSTRAINT `mitarbeiter_ibfk_2` FOREIGN KEY (`adresse`) REFERENCES `adresse` (`adresse_id`),
   CONSTRAINT `mitarbeiter_ibfk_3` FOREIGN KEY (`vorgesetzter`) REFERENCES `mitarbeiter` (`ma_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -272,7 +275,7 @@ CREATE TABLE `pruefung` (
   CONSTRAINT `pruefung_ibfk_1` FOREIGN KEY (`fach`) REFERENCES `fach` (`fach_id`),
   CONSTRAINT `pruefung_ibfk_2` FOREIGN KEY (`student`) REFERENCES `student` (`student_id`),
   CONSTRAINT `pruefung_ibfk_3` FOREIGN KEY (`raum`) REFERENCES `raum` (`raum_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4607 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -300,7 +303,7 @@ CREATE TABLE `raum` (
   PRIMARY KEY (`raum_id`),
   KEY `standort` (`standort`),
   CONSTRAINT `raum_ibfk_1` FOREIGN KEY (`standort`) REFERENCES `standort` (`standort_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -322,7 +325,7 @@ DROP TABLE IF EXISTS `semester`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `semester` (
   `semester` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -349,7 +352,7 @@ CREATE TABLE `standort` (
   PRIMARY KEY (`standort_id`),
   KEY `adresse` (`adresse`),
   CONSTRAINT `standort_ibfk_1` FOREIGN KEY (`adresse`) REFERENCES `adresse` (`adresse_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -380,7 +383,7 @@ CREATE TABLE `student` (
   KEY `adresse` (`adresse`),
   CONSTRAINT `student_ibfk_1` FOREIGN KEY (`klasse`) REFERENCES `klasse` (`klasse_id`),
   CONSTRAINT `student_ibfk_2` FOREIGN KEY (`adresse`) REFERENCES `adresse` (`adresse_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=353 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -629,3 +632,4 @@ SET character_set_client = @saved_cs_client;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2022-01-31 11:49:51
+
