@@ -119,14 +119,6 @@ WHERE lv.titel = 'ITAR1';
 
 
 
-/* Self JOIN, um mehrfach vergebene Räume zu finden */
-SELECT lv1.titel, lv1.klasse, lv1.raum, lv1.dozent, lv1.beginn, lv2.titel,  lv2.klasse, lv2.raum, lv2.dozent, lv2.beginn
-FROM lehrveranstaltung lv1 join lehrveranstaltung lv2 ON lv1.beginn = lv2.beginn AND lv1.raum = lv2.raum AND lv1.klasse != lv2.klasse;
-
-/* Self JOIN, um doppelt gebuchte Dozenten zu finden */
-SELECT lv1.titel, lv1.klasse, lv1.raum, lv1.dozent, lv1.beginn, lv2.titel,  lv2.klasse, lv2.raum, lv2.dozent, lv2.beginn
-FROM lehrveranstaltung lv1 join lehrveranstaltung lv2 ON lv1.beginn = lv2.beginn AND lv1.dozent = lv2.dozent AND lv1.klasse != lv2.klasse;
-
 /* Kap. 4.7 Aufgabe 1 - Stundenplan mit Lehrveranstaltungen und Prüfungsterminen für 
 die Studentin Hanna Wirz*/
 SELECT l.titel, l.beginn, l.ende , sta.name 'Standort', r.bezeichnung 'Raum'
@@ -143,6 +135,13 @@ FROM pruefung p JOIN student s ON p.student = s.student_id
 WHERE s.name = 'Hanna Wirz'
 ORDER BY beginn;
 
-/* Freie Räume finden, mit Subquery */
+/* Kap. 4.7 Aufgabe 2 - Self JOIN, um mehrfach vergebene Räume zu finden */
+SELECT lv1.titel, lv1.klasse, lv1.raum, lv1.dozent, lv1.beginn, lv2.titel,  lv2.klasse, lv2.raum, lv2.dozent, lv2.beginn
+FROM lehrveranstaltung lv1 join lehrveranstaltung lv2 ON lv1.beginn = lv2.beginn AND lv1.raum = lv2.raum AND lv1.klasse != lv2.klasse;
+
+/* Kap. 4.7 Aufgabe 3 - Self JOIN, um doppelt gebuchte Dozenten zu finden */
+SELECT lv1.titel, lv1.klasse, lv1.raum, lv1.dozent, lv1.beginn, lv2.titel,  lv2.klasse, lv2.raum, lv2.dozent, lv2.beginn
+FROM lehrveranstaltung lv1 join lehrveranstaltung lv2 ON lv1.beginn = lv2.beginn AND lv1.dozent = lv2.dozent AND lv1.klasse != lv2.klasse;
+
 
 
