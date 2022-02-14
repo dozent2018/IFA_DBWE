@@ -1,4 +1,4 @@
-# ist_zahl1.py nutzt str.isdecimal() um zu prüfen, ob 
+# ist_zahl3.py nutzt str.isdecimal() um zu prüfen, ob
 # ein String nur Zahlen enthält
 ist_zahl = False
 
