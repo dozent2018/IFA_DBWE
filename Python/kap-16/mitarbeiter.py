@@ -24,11 +24,11 @@ class Mitarbeiter:
         else:
             print( 'Fehler, Lohn liegt ausserhalb der Grenzwerte für Lohnklasse', self.__lohnklasse)
 
-    def get_lohnklasse(self):
-        return self.__lohnklasse
-
     def get_lohn(self):
         return self.__lohn
+
+    def get_lohnklasse(self):
+        return self.__lohnklasse
 
 if __name__ == '__main__':
     Klaus = Mitarbeiter('Klaus Meier', 2, 80000.00)
@@ -36,5 +36,11 @@ if __name__ == '__main__':
     Klaus.set_lohn(20000)
     Klaus.set_lohn(100000)
     Klaus.set_lohnklasse(4)
+    Peter = Mitarbeiter('Peter Schmidt', 3, 10250.00)
+    print(Peter.lohnklassen)
+    print(Klaus.lohnklassen)
+    Peter.lohnklassen[3]['high_limit'] = 200000.00
+    print(Peter.lohnklassen)
+    print(Klaus.lohnklassen)
 
 
