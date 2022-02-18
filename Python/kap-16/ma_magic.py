@@ -1,4 +1,4 @@
-# ma_str_repr.py
+# ma_magic.py
 class Mitarbeiter:
     lohnklassen = {
         1:{'low_limit':40000.00,'high_limit':69999.00},
@@ -17,6 +17,12 @@ class Mitarbeiter:
 
     def __repr__(self) :
         return "Mitarbeiter(" + self.name + "," + str(self.__lohnklasse) + "," + str(self.__lohn) + ")"
+
+    def __eq__(self, __o: object) -> bool:
+        if self.name == __o.name and self.lohnklasse == __o.lohnklasse and self.lohn == __o.lohn:
+            return True
+        else:
+            return False
 
     @property
     def lohnklasse(self):
