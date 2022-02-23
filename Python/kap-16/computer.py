@@ -10,9 +10,11 @@ class Computer:
 
     def boot(self):
         self.__running = True
+        print('booted')
 
     def shutdown(self):
         self.__running = False
+        print('Shutdown complete')
 
     def ping(self):
         if self.__running :
@@ -29,3 +31,5 @@ if __name__ == '__main__':
     c1.ping()
     c1.shutdown()
     c1.ping
+else:
+    print('Importiere', __name__)

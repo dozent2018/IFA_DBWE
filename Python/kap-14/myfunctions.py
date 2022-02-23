@@ -2,6 +2,8 @@
 
 # Aufgabe 1
 def is_int(string: str) -> bool :
+    """Prüft, ob ein String in einen int-Wert umgewandelt werden kann.
+    Falls ja, gibt die Funktion True zurück"""
     try:
         zahl = int(string)
         return True
@@ -9,7 +11,9 @@ def is_int(string: str) -> bool :
         return False
 
 # Aufgabe 2
-def is_float(string: str) -> bool :
+def is_float(string: str) -> bool:
+    """Prüft, ob ein String in einen float-Wert umgewandelt werden kann.
+    Falls ja, gibt die Funktion True zurück"""
     try:
         zahl = float(string)
         return True
@@ -18,6 +22,9 @@ def is_float(string: str) -> bool :
 
 # Aufgabe 3
 def summe(zahlen: list) -> float :
+    """Summiert Zahlen in einer Liste. Gibt die Summe zurück.
+    Listenelemente, die nicht in float umgewandelt werden können,
+    werden ignoriert."""
     sum = 0.0
     for element in zahlen :
         if is_float(element) :
@@ -26,10 +33,13 @@ def summe(zahlen: list) -> float :
 
 # Aufgabe 4
 def mittel( zahlenliste: list ) -> float :
+    """Berechnet den Mittelwert von Zahlen in einer Liste."""
     return summe(zahlenliste) / len(zahlenliste)
 
 # Aufgabe 5
 def read_int(prompt: str) -> int :
+    """Fordert solange zur Eingabe einer ganzen Zahl auf, bis eine eingegeben wurde.
+    Ist die Eingabe nicht in int umwandelbar, wird eine Fehlermeldung ausgegeben"""
     while is_int == False :
         try:
             return int(input(prompt))
@@ -38,6 +48,8 @@ def read_int(prompt: str) -> int :
 
 # Aufgabe 6
 def read_float(prompt: str) -> int :
+    """Fordert solange zur Eingabe einer Zahl auf, bis eine eingegeben wurde.
+    Ist die Eingabe nicht in float umwandelbar, wird eine Fehlermeldung ausgegeben"""
     while is_int == False :
         try:
             return float(input(prompt))
@@ -53,15 +65,17 @@ def yes(prompt: str, antworten: list) -> bool :
         return False
 
 # Aufgabe 8
-def is_prime(x: int) -> bool: 
+def is_prime(x: int) -> bool:
+    """ Prüft, ob die übergebene Zahl eine Primzahl ist.
+    Falls ja, wird True zurückgegeben"""
     # Einfache Version:
-    # Für alle Teiler von 2 bis x-1 ausprobieren, 
-    # ob x durch Teiler ohne Rest teilbar ist. 
+    # Für alle Teiler von 2 bis x-1 ausprobieren,
+    # ob x durch Teiler ohne Rest teilbar ist.
     # Läuft für grosse Zahlen sehr lange
     if x == 2 : return True
     for teiler in range( 2, x ):
         if x % teiler == 0:
-            # Die Zahl ist ohne Rest durch eine andere Zahl teilbar 
+            # Die Zahl ist ohne Rest durch eine andere Zahl teilbar
             # -> keine Primzahl, es ist nicht nowendig, weiter zu probieren
             return False
     return True
@@ -81,12 +95,12 @@ def kgv(x: int, y: int) -> int :
 # Aufgabe 11
 def prime_factors(x: int) -> list :
     # Einfache Version:
-    # Für alle Teiler von 2 bis x ausprobieren, 
-    # ob x durch Teiler ohne Rest teilbar ist. 
+    # Für alle Teiler von 2 bis x ausprobieren,
+    # ob x durch Teiler ohne Rest teilbar ist.
     # Läuft für grosse Zahlen sehr lange
     factors = []
     for factor in range( 2, x + 1 ) :
         while x % factor == 0:
             factors.append(factor)
-            x = x // factor     
+            x = x // factor
     return factors

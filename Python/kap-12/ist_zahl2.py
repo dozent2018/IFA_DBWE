@@ -1,4 +1,4 @@
-# ist_zahl1.py nutzt den try - except Mechanismus, um auf
+# ist_zahl2.py nutzt den try - except Mechanismus, um auf
 # Fehler bei der Umwandlung str -> int zu reagieren
 konvertiert = False
 

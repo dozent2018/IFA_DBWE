@@ -42,5 +42,7 @@ if __name__ == '__main__':
     Peter.lohnklassen[3]['high_limit'] = 200000.00
     print(Peter.lohnklassen)
     print(Klaus.lohnklassen)
+else:
+    print(__name__ , 'wurde importiert')
 
 
