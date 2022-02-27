@@ -14,3 +14,4 @@ for r in myresult:
   print(r)
 
 cnx.close()
+

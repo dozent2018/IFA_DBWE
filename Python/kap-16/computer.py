@@ -17,7 +17,7 @@ class Computer:
         print('Shutdown complete')
 
     def ping(self):
-        if self.__running :
+        if self.__running == True:
             print('pong')
 
     def __str__(self) -> str:
