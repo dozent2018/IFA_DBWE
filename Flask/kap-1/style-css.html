@@ -3,6 +3,10 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <style>
+      body {background-color: powderblue;}
+      h1   {color: blue;}
+      p    {color: red;}
+
       a:link {
         color: green;
         background-color: transparent;
@@ -10,7 +14,7 @@
       }
 
       a:visited {
-        color: pink;
+        color: darkblue;
         background-color: transparent;
         text-decoration: none;
       }
@@ -55,6 +59,19 @@
       <li>Intern, durch ein &ltstyle&gt-Element innerhalb von &lthead&gt</li>
       <li>Extern, durch ein &ltlink&gt-Element, das auf eine separate CSS-Datei verweist </li>
     </ul>
+    <p style="color: green; font-size: x-large;">Inline: Ein grosser grüner Paragraf.</p>
+    <p style="background-color: grey; color: pink;">Inline: Ein pinker Paragraf auf Grau.</p>
+    <div style="background-color:red;">
+      Mit &ltdiv&gt gestylter Text Text Text
+    </div>
+    <div style="background-color:lawngreen;">
+      Mit &ltdiv&gt gestylter Text div2
+    </div>
+    <p style="color: black">Ein im &ltspan&gt mit style
+      <span style="background-color:yellow;">
+      wie vom Textmarker hervorgehobener</span>
+      Text und dann geht es normal weiter</p>
+    <p> Und hier wirkt wieder der im &lthead&gt gesetzte tyle für Parafen</p>
     <br><br>
     <a href="index.html">Zurück zu index.html</a>
   </body>
