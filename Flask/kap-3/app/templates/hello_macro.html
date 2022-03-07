@@ -1,0 +1,16 @@
+<!-- Kap 3.2.3 app/templates/hello_macros.html -->
+<!doctype html>
+<html>
+    {% import 'macros.html' as macros %}
+    <head>
+        <title>{{ title }}</title>
+    </head>
+    <body>
+        <ul>
+            {% for line in lines %}
+                {{ macros.render_line(line) }}
+            {% endfor %}
+        </ul>
+    </body>
+</html>
+

@@ -9,6 +9,7 @@ except mysql.connector.Error as err:
 mycursor = cnx.cursor()
 mycursor.execute("SELECT * FROM standort")
 myresult = mycursor.fetchall()
+print(myresult)
 
 for r in myresult:
   print(r)

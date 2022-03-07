@@ -1,0 +1,19 @@
+<!-- Kap 3.2.3 app/templates/hello_for.html -->
+<!doctype html>
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }}</title>
+        {% else %}
+        <title>Startseite</title>
+        {% endif %}
+    </head>
+    <body>
+        {% for line in lines %}
+        <div>
+            <p>{{ line }} <p>
+        </div>
+        {% endfor %}
+    </body>
+</html>
+
