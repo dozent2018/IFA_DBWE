@@ -37,7 +37,7 @@ class Computer:
 
     def __str__(self) -> str:
         return "inventar_nr : {}\ninterfaces : {}\nperipherie: {}\nbeschreibung : {}\nrunning: {}\start_time : {}".format(
-            self.inventar_nr, self.interfaces, self.peripherie, self.beschreibung, self.running, self.start_time)
+            self.inventar_nr, self.interfaces, self.peripherie, self.beschreibung, self.running, self.__start_time)
 
 class Server(Computer):
         def __init__(self, inventar_nr : str, hostname : str = '', interfaces : list = [],
@@ -54,29 +54,29 @@ class Server(Computer):
                 print('Connected to', self.hostname)
 
 class Laptop(Computer):
-        def __init__(self, inventar_nr : str, interfaces : list = [],
+    def __init__(self, inventar_nr : str, interfaces : list = [],
                 peripherie : list =[], beschreibung : str = '' ):
         super().__init__(inventar_nr, interfaces, peripherie, beschreibung)
         self.batterieladung = 100
 
 
-        @property
-        def batterieladung(self):
-            time_running = datetime.today() - self.start_time
-            battery_minutes = time_running.total_seconds() / 60
-            self.__batterieladung -= battery_minutes / 5
-            return self.__batterieladung
+    @property
+    def batterieladung(self):
+        time_running = datetime.today() - self.start_time
+        battery_minutes = time_running.total_seconds() / 60
+        self.__batterieladung -= battery_minutes / 5
+        return self.__batterieladung
 
-        def aufklappen(self):
-            self.__running = True
+    def aufklappen(self):
+        self.__running = True
 
-        def zuklappen(self):
-            self.__running = False
-            self.start_time = datetime.today()
+    def zuklappen(self):
+        self.__running = False
+        self.start_time = datetime.today()
 
-        def __str__(self) -> str:
-            return "inventar_nr : {}\nhostname: {}\ninterfaces : {}\nbeschreibung : {}\nrunning: {}\nbatterieladung: {}".format(
-                    self.inventar_nr, self.hostname, self.interfaces, self.beschreibung, self.running, self.batterieladung)
+    def __str__(self) -> str:
+        return "inventar_nr : {}\nhostname: {}\ninterfaces : {}\nbeschreibung : {}\nrunning: {}\nbatterieladung: {}".format(
+                self.inventar_nr, self.hostname, self.interfaces, self.beschreibung, self.running, self.batterieladung)
 
 
 if __name__ == '__main__':

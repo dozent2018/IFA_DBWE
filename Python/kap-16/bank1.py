@@ -6,10 +6,14 @@ class Kunde:
         self.kunde_nr = nr
         self.__konten = []
 
+    # Der Ersatz für eine get_name Methode
+    # Die Variable __name wird als 'name' zur Verfügung gestellt
     @property
     def name(self):
         return self.__name
 
+    # Der Ersatz für eine set_name Methode
+    # Die Variable __name kann nun mit name = Wert gesetzt werden
     @name.setter
     def name(self, name):
         self.__name = name

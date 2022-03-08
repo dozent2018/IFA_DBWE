@@ -18,6 +18,7 @@ class Mitarbeiter:
     def __repr__(self) :
         return "Mitarbeiter(" + self.name + "," + str(self.__lohnklasse) + "," + str(self.__lohn) + ")"
 
+
     def __eq__(self, __o: object) -> bool:
         if self.name == __o.name and self.lohnklasse == __o.lohnklasse and self.lohn == __o.lohn:
             return True
@@ -55,5 +56,16 @@ if __name__ == '__main__':
     Klaus.lohnklasse = 4
     print(Klaus)
     print(repr(Klaus))
+    Klaus2 = Klaus
+    if Klaus2 == Klaus:
+        print('Objekte sind identisch')
+        print(id(Klaus))
+        print(id(Klaus2))
+    Klaus3 = Mitarbeiter('Klaus Meier', 2, 80000.00)
+    if Klaus3 == Klaus:
+        print('Objekte sind gleich')
+        print(id(Klaus))
+        print(id(Klaus3))
+
 
 

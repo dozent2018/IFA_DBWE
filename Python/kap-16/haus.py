@@ -1,5 +1,4 @@
 class Haus:
-
     def __init__(self, farbe):
         self.farbe = farbe
         self.tuer_offen = False
