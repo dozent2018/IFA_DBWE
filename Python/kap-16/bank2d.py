@@ -6,39 +6,38 @@
 # In der Klasse Konto gibt es eine Liste der Bewegungen
 # Ein Kontoauszug kann mit Konto.kontoauszug() erzeugt werden
 # Die Methoden Konto.einzahlen() und Konto.auszahlen() sind implementiert
+# Es wurden durchgehend Typ-Annotationen eingefügt
 
 from datetime import datetime
 
 class Kunde:
-    def __init__(self, name, nr):
+
+    def __init__(self, name:str, nr:int) -> None:
         self.name = name
         self.kunde_nr = nr
         self.__konten = []
 
-    def __str__(self):
+    def __str__(self) -> str:
         return '<class Kunde> {}, {}, {}'.format(self.name, self.kunde_nr, self.konten)
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self.__name
-
     @name.setter
-    def name(self, name):
+    def name(self, name:str) -> int:
         self.__name = name
 
     @property
-    def kunde_nr(self):
+    def kunde_nr(self) -> int:
         return self.__kunde_nr
-
     @kunde_nr.setter
-    def kunde_nr(self, nr):
+    def kunde_nr(self, nr:int) ->None:
         self.__kunde_nr = nr
 
     @property
-    def konten(self):
+    def konten(self) -> None:
         return self.__konten
-
-    def add_konto(self, art:str='undefiniert', saldo:float=0.0,limit:float=0.0):
+    def add_konto(self, art:str='undefiniert', saldo:float=0.0,limit:float=0.0) -> object:
         if len(self.konten) == 0:
             # es gibt noch kein Konto
             new_nr = self.kunde_nr + 1
