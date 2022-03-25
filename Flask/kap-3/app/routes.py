@@ -7,9 +7,9 @@ from app import app
 @app.route('/index')
 def index():
     user = 'Jochen'
-    return render_template('hello_user.html', title='Home', name=user)
+    # return render_template('hello_user.html', title='Home', name=user)
     # return render_template('hello_if.html', name=user)
-    # return render_template('hello_if.html', title='Home')
+    return render_template('hello_if.html', title='Home')
 
 # Test Templates 2
 @app.route('/looptest')
