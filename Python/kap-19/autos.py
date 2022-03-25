@@ -54,7 +54,7 @@ class Cabrio(Auto):
 
 class Transporter(Auto):
     """Die Klasse Transporter ist von Auto abgeleitet.
-       Zusätzlich hat sie das Attribut nutzlast"""
+       Zusätzlich hat sie das Attribute ladung und  nutzlast"""
     def __init__(self, kennz, nutzlast, tank_groesse=80.0, verbrauch=12.0):
         """hier wird die __init__() Methode der Klasse Auto aufgerufen"""
         super().__init__(kennz, tank_groesse, verbrauch)
@@ -64,7 +64,7 @@ class Transporter(Auto):
     def beladen(self, kg):
         """Die methode beladen() erweitert die Klasse Auto.
         Damit kann Ladung hinzugefügt werden, bis die Nutzlast erreicht ist"""
-        if self.ladung + kg <= nutzlast:
+        if self.ladung + kg <= self.nutzlast:
             ladung += kg
         else:
             self.ladung = self.nutzlast
@@ -72,9 +72,12 @@ class Transporter(Auto):
     def entladen(self, kg):
         """Die methode entladen() erweitert die Klasse Auto
         Damit kann die Ladung vermindert werden"""
-        ladung -= kg
+        if self.ladung - kg >= 0.0:
+            self.ladung -= kg
+        else:
+            self.ladung = 0.0
 
     def __repr__(self):
         """Die Methode __repr__() überschreibt __repr__() aus der Klasse Auto"""
-        return 'Transporter: {} km: {:.1f} tank_inhalt: {:.1f} nutzlast: {}'.format(
-        self.kennzeichen, self.km_stand, self.tank_inhalt, self.nutzlast)
+        return 'Transporter: {} km: {:.1f} tank_inhalt: {:.1f} nutzlast: {} ladung: {}'.format(
+        self.kennzeichen, self.km_stand, self.tank_inhalt, self.nutzlast, self.ladung)
