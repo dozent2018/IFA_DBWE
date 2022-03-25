@@ -59,16 +59,20 @@ class Transporter(Auto):
         """hier wird die __init__() Methode der Klasse Auto aufgerufen"""
         super().__init__(kennz, tank_groesse, verbrauch)
         self.nutzlast = nutzlast
+        self.ladung = 0.0
 
     def beladen(self, kg):
         """Die methode beladen() erweitert die Klasse Auto.
-        Damit kann Nutzlast hinzugefügt werden"""
-        nutzlast += kg
+        Damit kann Ladung hinzugefügt werden, bis die Nutzlast erreicht ist"""
+        if self.ladung + kg <= nutzlast:
+            ladung += kg
+        else:
+            self.ladung = self.nutzlast
 
     def entladen(self, kg):
         """Die methode entladen() erweitert die Klasse Auto
-        Damit kann Nutzlast vermindert werden"""
-        nutzlast -= kg
+        Damit kann die Ladung vermindert werden"""
+        ladung -= kg
 
     def __repr__(self):
         """Die Methode __repr__() überschreibt __repr__() aus der Klasse Auto"""
