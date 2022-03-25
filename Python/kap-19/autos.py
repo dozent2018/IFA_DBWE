@@ -31,7 +31,7 @@ class Auto:
         self.tank_inhalt = self.tank_groesse
 
     def fahren(self, km):
-        """Das Auto fährt so weit, wie die Tankfüllung und er Verbrauch hergeben"""
+        """Das Auto fährt so weit, wie es die Tankfüllung und der Verbrauch hergeben"""
         self.reichweite = self.tank_inhalt / self.verbrauch_pro_km
         if km <= self.reichweite:
             self.km_stand += km
