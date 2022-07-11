@@ -1,0 +1,48 @@
+# Konfigurationsdatei /etc/nginx/sites-enabled/microblog für NGINX
+# Version mit Einträgen mit Let's Encrypt Zertifikat und Schlüssel
+server {
+    # Für Requests auf Port 80 (http)
+    listen 80;
+    server_name lab70.ifalabs.org;
+
+	location /.well-known {
+		# Hier darf certbot Verifikationsdateien schreiben
+		root /home/student/microblog/certs;
+	}
+
+    location / {
+        # Redirect von http-Requests an die gleiche URL,
+        # aber per https
+        return 301 https://$host$request_uri;
+    }
+}
+server {
+    # Für Requests auf Port 443 (https)
+    listen 443 ssl;
+    server_name _;
+
+    # Speicherort des SSL-Zertifikats
+    ssl_certificate /etc/letsencrypt/live/lab70.ifalabs.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/lab70.ifalabs.org/privkey.pem;
+
+    # Zugriffs- und Fehlerlogs sollen in /var/log geschrieben werden
+    access_log /var/log/microblog_access.log;
+    error_log /var/log/microblog_error.log;
+
+    location / {
+        # Weitergabe von Requests an Gunicorn
+        proxy_pass http://localhost:8000;
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }   
+
+    location /static {
+        # Statische Files (z.B. CSS-Dateien, Bilder ...) soll
+        # Nginx direkt bedienen und nicht an die App weiterleiten
+        alias /home/student/microblog/app/static;
+        expires 30d;
+    }
+}
+
