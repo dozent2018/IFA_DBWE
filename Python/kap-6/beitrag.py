@@ -24,7 +24,7 @@ if brutto_lohn > beitrag_grenze2 :
 # Nur die Löhne über beitrag_ab sind beitragspflichtig
 # bis beitrag_grenze1 gilt prozentsatz1
 if brutto_lohn >= beitrag_ab :
-    beitrag1 = beitrag_grenze1 * prozentsatz1 / 100
+    beitrag1 = brutto_lohn * prozentsatz1 / 100
 # Lohnanteile über beitrag_grenze1 werden mit prozentsatz2 abgezogen
 if brutto_lohn > beitrag_grenze1 :
     beitrag2 = (brutto_lohn - beitrag_grenze1) * prozentsatz2 / 100
