@@ -1,5 +1,5 @@
 """
-eintritt.py demonstriert das Verschachteln mehrerer if und
+eintritt1.py demonstriert das Verschachteln mehrerer if und
 else Bedingungen. Nach jedem Doppelpunkt beginnt eine neue Suite,
 die um vier Leerzeichen weiter eingerückt werden muss
 """
@@ -13,9 +13,9 @@ else:
     if alter < 18:
         faktor = 0.5
     else:
-        if alter < 65:
-            faktor = 1.0
-        else:
+        if alter >= 65:
             faktor = 0.75
+        else:
+            faktor = 1.0
 
 print("Der Eintritt kostet:", normalpreis * faktor)

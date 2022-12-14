@@ -7,8 +7,9 @@ konvertiert = False
 while konvertiert == False :
     try:
         zahl = int(float(input('Geben Sie eine ganze Zahl ein: ')))
+        # int(float) schneidet die Nachkommastellen ab
         konvertiert = True
     except ValueError :
-        print('Ihre Eingabe ist keine ganze Zahl.')
+        print('Ihre Eingabe ist keine Zahl.')
 
 print('Die Zahl ist: ', zahl)
