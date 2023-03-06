@@ -16,4 +16,3 @@ haus3.farbe = 'gelb'
 print(haus3.farbe, haus3.tuer_offen, haus3.heizung_an)
 haus3.aufschliessen()
 print(haus3.farbe, haus3.tuer_offen, haus3.heizung_an)
-
