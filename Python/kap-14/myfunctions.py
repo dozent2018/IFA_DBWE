@@ -21,30 +21,40 @@ def is_float(string: str) -> bool:
         return False
 
 # Aufgabe 3
-def summe(zahlen: list) -> float :
+def summe(liste: list) -> float :
     """Summiert Zahlen in einer Liste. Gibt die Summe zurück.
     Listenelemente, die nicht in float umgewandelt werden können,
     werden ignoriert."""
     sum = 0.0
-    for element in zahlen :
+    for element in liste :
         if is_float(element) :
             sum = sum + float(element)
     return sum
 
 # Aufgabe 4
-def mittel( zahlenliste: list ) -> float :
+def mittel( liste: list ) -> float :
+    summe = 0
+    anzahl = 0
     """Berechnet den Mittelwert von Zahlen in einer Liste."""
-    return summe(zahlenliste) / len(zahlenliste)
+    for element in liste:
+        if is_float(element):
+            print('anzahl: ', anzahl, 'summe: ', summe)
+            summe = summe + element
+            anzahl = anzahl + 1
+    if anzahl == 0:
+        return 0.0
+    return ( summe / anzahl)
 
 # Aufgabe 5
 def read_int(prompt: str) -> int :
     """Fordert solange zur Eingabe einer ganzen Zahl auf, bis eine eingegeben wurde.
     Ist die Eingabe nicht in int umwandelbar, wird eine Fehlermeldung ausgegeben"""
-    while is_int == False :
-        try:
-            return int(input(prompt))
-        except ValueError:
-            print("Die Eingabe ist keine ganze Zahl")
+    instring = input(prompt)
+    while is_int(instring) == False :
+        print("Die Eingabe ist keine ganze Zahl")
+        instring = input(prompt)
+    return( int(instring) )
+    
 
 # Aufgabe 6
 def read_float(prompt: str) -> int :
