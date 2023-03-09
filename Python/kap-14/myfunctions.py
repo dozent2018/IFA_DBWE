@@ -27,6 +27,7 @@ def summe(liste: list) -> float :
     werden ignoriert."""
     sum = 0.0
     for element in liste :
+        # Hier wird die bereits geschriebene Funktion is_float() verwendet
         if is_float(element) :
             sum = sum + float(element)
     return sum
@@ -37,6 +38,7 @@ def mittel( liste: list ) -> float :
     anzahl = 0
     """Berechnet den Mittelwert von Zahlen in einer Liste."""
     for element in liste:
+        # Hier wird die bereits geschriebene Funktion is_float() verwendet
         if is_float(element):
             print('anzahl: ', anzahl, 'summe: ', summe)
             summe = summe + element
@@ -50,6 +52,7 @@ def read_int(prompt: str) -> int :
     """Fordert solange zur Eingabe einer ganzen Zahl auf, bis eine eingegeben wurde.
     Ist die Eingabe nicht in int umwandelbar, wird eine Fehlermeldung ausgegeben"""
     instring = input(prompt)
+    # Hier wird die bereits geschriebene Funktion is_int() verwendet
     while is_int(instring) == False :
         print("Die Eingabe ist keine ganze Zahl")
         instring = input(prompt)
@@ -60,14 +63,17 @@ def read_int(prompt: str) -> int :
 def read_float(prompt: str) -> int :
     """Fordert solange zur Eingabe einer Zahl auf, bis eine eingegeben wurde.
     Ist die Eingabe nicht in float umwandelbar, wird eine Fehlermeldung ausgegeben"""
-    while is_int == False :
-        try:
-            return float(input(prompt))
-        except ValueError:
-            print("Die Eingabe ist keine Fliesskommazahl")
+    # Hier wird die bereits geschriebene Funktion is_float() verwendet
+    while is_float(instring) == False :
+        print("Die Eingabe ist keine ganze Zahl")
+        instring = input(prompt)
+    return( float(instring) )
 
 # Aufgabe 7
 def yes(prompt: str, antworten: list) -> bool :
+    """Das Argument prompt wird als Eingabeaufforderung ausgegeben. 
+    Rückgabewert ist True, wenn eine der Antworten der Liste antworten 
+    eingegeben wurde, ansonsten False. """
     antwort = input(prompt).strip()
     if antwort in antworten :
         return True
