@@ -1,6 +1,6 @@
 # Inventar DBWE.TA1A: Übersicht
 
-Stand 29.09.2026. Erstellt mit 8 parallelen Subagents; jede Datei im Google Drive (Rework-Ordner) und im Repo wurde vollständig gelesen, Python-Code ausgeführt, Flask mit aktuellen Versionen getestet. Die SQL-Prüfung gegen MySQL 8 (08) läuft noch.
+Stand 29.09.2026. Erstellt mit 8 parallelen Subagents; jede Datei im Google Drive (Rework-Ordner) und im Repo wurde vollständig gelesen, Python-Code ausgeführt, Flask mit aktuellen Versionen getestet, SQL gegen MySQL 8.0.46 und 8.4.11 ausgeführt (08).
 
 Begriffe: **KT1-KT6** = die 6 Kurstage laut Unterrichtsplan S2610 (UP). **HO-WP0-6** = Work Packages im KI-Handoff v2.0 (nach Units). Die beiden Nummerierungen sind nicht deckungsgleich.
 
@@ -15,7 +15,7 @@ Begriffe: **KT1-KT6** = die 6 Kurstage laut Unterrichtsplan S2610 (UP). **HO-WP0
 | [05_Repo_SQL_Python_kap1-12.md](05_Repo_SQL_Python_kap1-12.md) | Schema «beispiele» mit ERD und Datenstatistik, SQL-Kapiteldateien, Python kap-1 bis 12, verbrauchte Szenarien |
 | [06_Repo_Python_kap13-19.md](06_Repo_Python_kap13-19.md) | Python kap-13 bis 19, bank2c-Analyse, Datendateien, Bereinigungsliste |
 | [07_Repo_Flask_Struktur.md](07_Repo_Flask_Struktur.md) | Flask-Kapitel, Legacy-APIs, Smoke-Test Flask 3.1, Deployment-Config, microblog-Gitlink |
-| 08_Verifikation_MySQL.md (folgt) | Import «beispiele», Repo-SQL und Unit-3-Material gegen MySQL 8, Index-Messung, Demo U6 |
+| [08_Verifikation_MySQL.md](08_Verifikation_MySQL.md) | Import «beispiele», Repo-SQL und Unit-3-Material gegen MySQL 8, Index-Messung, Demo U6 |
 
 Das Repo ist öffentlich. Die Inventardateien enthalten deshalb keine Musterlösungen, Quiz-Lösungen, Kontrollwerte, Credentials oder Personendaten.
 
@@ -24,7 +24,7 @@ Das Repo ist öffentlich. Die Inventardateien enthalten deshalb keine Musterlös
 1. **KT1 (23.10.2026) ist der Engpass.** Von 20 benötigten Materialien existieren 4 (PP1-PP4), und diese haben selbst 7 schwere Fehler. Die Vorbereitungs-Mail mit Installationsanleitung muss bis 16.10.2026 raus.
 2. **Gesamtstand: 25 von 108 Materialien vorhanden.** KT2 und KT3 sind teilweise gedeckt (U3-U6), KT4-KT6 haben noch nichts. Der Ordner Unit_7 fehlt, obwohl der UP "Units 5-7 fertig" angibt.
 3. **Die Planungsgrundlage widerspricht sich.** Der UP verdichtet 16 Units auf 12 Halbtage mit netto 2'430 statt 3'600 Minuten; der Handoff rechnet weiter mit 5×45 min pro Unit und mit Selbststudium zwischen Units, die jetzt am selben Tag liegen.
-4. **«Verifiziert» heisst bisher: Python ja, SQL nur über SQLite.** Die Python-Musterlösungen U4-U6 laufen; mehrere Übungsblätter enthalten aber inhaltliche Fehler, die erst beim Ausführen auffallen (BOM-Falle U6.2, Textvergleich, Refactoring-Prämisse U6.1).
+4. **Der Code des vorhandenen Materials läuft, die Texte darum enthalten Fehler.** Python-Musterlösungen U4-U6, die Kontrollwerte U3.1 und die Demo U6 sind jetzt auch auf MySQL 8 bestätigt. Mehrere Übungsblätter und Folien machen aber Aussagen, die beim Ausführen nicht eintreten (BOM-Falle U6.2, Textvergleich, Refactoring-Prämisse U6.1, Index-Demo U3).
 5. **Die Muster-DB «beispiele» trägt einige geplante Übungen nicht.** Es gibt keine Studierenden ohne Klasse, keine Klassen ohne Studierende, kein Fach ohne Prüfung; LEFT-JOIN-Aufgaben aus Handoff und PP4 zeigen keinen Unterschied. Zwei Beziehungen haben keinen FK.
 6. **Der Repo-Code ist als Referenz nur bedingt brauchbar.** Syntaxfehler in kap-3.sql, falsch rechnende Anfängerskripte, kap-18-Demos ohne Treffer, Flask kap-15 unter Werkzeug 3 nicht importierbar, kap-14 unvollständig.
 7. **Offene externe Abhängigkeiten blockieren ab KT2:** PA-Aufgabenstellung und Raster (PA-Kickoff am KT2), Lehrmittel-Verteilung (Leseauftrag vor KT1), VMs auf ifalabs.org (Deployment am KT5), Klassengrösse (Präsentationsslots KT6).
@@ -81,7 +81,15 @@ Quelle: 01, Abschnitt 3.4.
 
 ## MySQL-8-Verifikation
 
-Siehe 08 (wird ergänzt, sobald der Lauf abgeschlossen ist).
+Quelle: 08. Geprüft auf MySQL 8.0.46 (Ubuntu-Build) und 8.4.11 (offizielles Oracle-Build), Ergebnisse identisch.
+
+- **Import «beispiele»:** läuft auf beiden Versionen fehlerfrei (15 Deprecation-Warnungen wegen `SET NAMES utf8`). MariaDB/XAMPP und MySQL 5.7 scheitern in Zeile 1 an der Collation. Empfehlung für die Installationsanleitung: MySQL 8.4 LTS, Kontrolle mit `SELECT VERSION();` (VER-F15).
+- **Unit 3:** Alle Kontrollwerte von `loesung_u3_1.sql` stimmen auf MySQL (die bisherige SQLite-Prüfung ist damit bestätigt). Views-Demo läuft; im Safe-Update-Modus der Workbench bleibt beim Aufräumen eine Testklasse stehen, `table_rows` zeigt nach dem Import 0 (VER-F08, F09).
+- **Index-Demo:** Funktioniert nur mit frischem Setup (VER-F21). Gemessen: ohne Index 11 ms, mit Index 0.16 ms (Faktor ca. 70), Schreiben mit 3 Indexen Faktor 2. Zwei Folienaussagen treffen nicht ein: der zweite Lauf ist nicht schneller (Buffer Pool schon gefüllt), und in Block 5 wählt der Optimizer den Index und wird damit schneller (VER-F11, F12).
+- **Demo U6 (`demo_u6_mysql.py`):** läuft vollständig, alle Kontrollwerte des Drehbuchs stimmen; kleine Abweichungen bei Schreibweise und Fehlermeldungen (VER-F19).
+- **Repo-SQL:** kap-5, kap-6, kap-8, kap-10 laufen (mit Default-Schema); kap-3, kap-4, kap-7 nicht. kap-4 zeigt OUTER JOIN falsch (VER-F01), kap-5 verändert «beispiele» dauerhaft (VER-F14).
+- **PP4:** Die Folienabfrage endet mit `ERROR 1054 Unknown column 's.klasse_id'` (VER-F02).
+- **Nicht geprüft:** Workbench-GUI selbst, Windows und macOS, MySQL 9.x.
 
 ## Entscheide, die anstehen
 
