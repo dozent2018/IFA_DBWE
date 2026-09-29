@@ -101,7 +101,7 @@ Weitere Beobachtungen zum Dump:
 - Keine CHECK-Constraints (z. B. `raum.kapazitaet` darf negativ werden, siehe VER-F14).
 - `standort_id` hat die Werte 1, 2, 3, 9 (Lücke; AUTO_INCREMENT steht auf 100).
 - Collation `utf8mb4_0900_ai_ci` ist akzent- und gross/klein-unabhängig: `WHERE ort = 'Zurich'` findet dieselben 40 Adressen wie `'Zürich'`.
-- `lehrgang.beschreibung` von HFWI enthält ein unsichtbares weiches Trennzeichen (U+00AD, Position 18, «Wirtschafts­informatiker»). `LIKE '%Wirtschaftsinformatik%'` findet deshalb 0 Zeilen.
+- `lehrgang.beschreibung` von HFWI enthält ein unsichtbares weiches Trennzeichen (U+00AD an Position 18, zwischen «Wirtschafts» und «informatiker»). `LIKE '%Wirtschaftsinformatik%'` findet deshalb 0 Zeilen.
 - `fach.titel` enthält den Tippfehler «Risikomangement» (bekannt, in der Musterlösung vermerkt).
 - `lehrveranstaltung.titel` sind Kürzel mit Laufnummer (z. B. `DEUT1`, `ITAR1`), nie gleich `fach.titel`.
 
@@ -228,9 +228,9 @@ Alle 9 Statements laufen auf 8.0.46 und 8.4.11 fehlerfrei, auch im Safe-Update-M
 | 1 Kennzahlen | stimmt | stimmt |
 | 2 Klassengrössen | stimmt | stimmt (Spitze inkl. Gleichstand und Sortierung) |
 | 3 Notenschnitt je Fach | stimmt | stimmt (beide genannten Spitzenwerte) |
-| 4 LV pro Klasse und Jahr | stimmt | stimmt (Werte Klasse 1); Fehlvariante `GROUP BY klasse, beginn` liefert so viele Zeilen wie die Tabelle (2310), Kommentar «über 2000» stimmt; Alias-Variante `GROUP BY klasse, jahr` läuft |
+| 4 LV pro Klasse und Jahr | stimmt | stimmt (Werte Klasse 1); die im Kommentar genannte Fehlvariante (Gruppierung nach dem vollen Datum) liefert so viele Zeilen wie die Tabelle (2310), «über 2000» stimmt; die im Kommentar erwähnte Alias-Variante läuft auf MySQL |
 | 5a HAVING Klassen | stimmt | stimmt |
-| 5b HAVING Fächer | stimmt | stimmt; Variante mit Alias (`HAVING schnitt < 4.4`) liefert dieselbe Zeilenzahl, kein Rundungs-Grenzfall |
+| 5b HAVING Fächer | stimmt | stimmt; eine Variante, die im HAVING den gerundeten Wert vergleicht, liefert dieselbe Zeilenzahl, kein Rundungs-Grenzfall |
 | 6 Drei beste Klassen | stimmt | stimmt, aber Platz 2 und 3 haben gerundet denselben Schnitt; ihre Reihenfolge hängt vom Sortierausdruck ab (VER-F17) |
 | Zusatz | stimmt | stimmt |
 
@@ -240,12 +240,11 @@ Typische TN-Fehler, auf MySQL 8.0.46 nachgestellt:
 
 | Variante | Ergebnis |
 |---|---|
-| `WHERE AVG(...) < 4.4` | 1111 `Invalid use of group function` (kein Syntaxfehler 1064, wie der Kommentar sagt) |
-| nicht gruppierte Spalte, z. B. `SELECT klasse, name, COUNT(*) FROM student GROUP BY klasse` | 1055 `... not in GROUP BY clause and contains nonaggregated column 'beispiele.student.name' ... incompatible with sql_mode=only_full_group_by` |
-| `SELECT beginn ... GROUP BY klasse, YEAR(beginn)` | 1055 |
-| Gruppieren nach `p.fach`, Ausgabe `f.titel` | **kein Fehler**: MySQL 8 erkennt die funktionale Abhängigkeit über Join-Gleichheit und Primärschlüssel |
-| Gruppieren nach `s.klasse`, Ausgabe `k.bezeichnung` | **kein Fehler** (dito) |
-| Gruppieren nur nach `k.bezeichnung` | kein Fehler, gleiches Ergebnis (Bezeichnungen sind eindeutig) |
+| Aggregatfunktion in der WHERE-Klausel | 1111 `Invalid use of group function` (kein Syntaxfehler 1064, wie der Kommentar sagt) |
+| Spalte im SELECT, die weder gruppiert noch funktional abhängig ist (z. B. ein Studierenden-Name neben der Klassen-ID) | 1055 `... not in GROUP BY clause and contains nonaggregated column 'beispiele.student.name' ... incompatible with sql_mode=only_full_group_by` |
+| volle Datumsspalte im SELECT, gruppiert wird aber nur nach dem Jahr | 1055 |
+| nach der Fremdschlüsselspalte gruppieren, eine Spalte der verbundenen Tabelle ausgeben (Aufgaben 3 und 6) | **kein Fehler**: MySQL 8 erkennt die funktionale Abhängigkeit über Join-Gleichheit und Primärschlüssel |
+| nur nach der Bezeichnung statt nach dem Schlüssel gruppieren (Aufgabe 6) | kein Fehler, gleiches Ergebnis (Bezeichnungen sind eindeutig) |
 
 ### 4.2 `demo_u3_views.sql`
 
@@ -390,8 +389,8 @@ Abgeleitet aus Import und Läufen; die Workbench selbst konnte nicht gestartet w
 | VER-F14 | mittel | `SQL/kap-5.sql` Nr. 23 (Z. 51) | `UPDATE raum SET kapazitaet = kapazitaet - 5 WHERE kapazitaet < 20` ändert «beispiele» dauerhaft (17 Räume). Danach liefert kap-6 Nr. 1 4 statt 8 Zeilen; mehrfaches Ausführen erzeugt negative Kapazitäten (-15 nach 5 Läufen, kein CHECK). | Beispiel in `START TRANSACTION; ... ROLLBACK;` einbetten oder klar als «verändert die DB, Reset per Re-Import» markieren. |
 | VER-F15 | mittel | Setup der TN (Dump, Unit 2) | Mit MariaDB (z. B. XAMPP) oder MySQL 5.7 scheitert der Import in Zeile 1 (1273 Unknown collation). Nach Collation-Ersatz läuft er, aber ohne ONLY_FULL_GROUP_BY; der Fehler 1055 aus U3.1 tritt dann nicht auf. | In der Setup-Anleitung MySQL 8.4 LTS Community ausdrücklich verlangen, XAMPP/MariaDB ausschliessen, Kontrolle mit `SELECT VERSION();` in die Setup-Checkliste aufnehmen. |
 | VER-F16 | tief | Kurzfolien U3 (Folien 3, 6, 8), Kommentar `index_demo_setup.sql` | Alle gemessenen Zeiten liegen unter den Angaben: Setup 0.6 s statt «5 bis 30 s», ohne Index 11 ms statt «20 bis 60 ms», CREATE INDEX 0.11 s statt «0.3 bis 2 s». Die Workbench zeigt 0.16 ms vermutlich als `0.000 sec`, dann lässt sich kein Faktor rechnen. | Bereiche weiter fassen («unter 1 s bis 30 s»), Hinweis «eigene Zahlen notieren» beibehalten. Für sichtbarere Zeiten optional 1 Mio. Zeilen (gemessen: Setup 6.3 s, ohne Index 115 ms, mit Index 0.32 ms; Kunde 4711 hat dann 200 Zeilen) oder den Faktor aus `SHOW PROFILES` / Performance Schema ablesen. |
-| VER-F17 | tief | `loesung_u3_1.sql` Aufgabe 6 | Platz 2 und 3 haben gerundet denselben Schnitt. Die Musterlösung sortiert nach dem gerundeten Alias, die Reihenfolge der beiden ist damit zufällig; wer nach `AVG(p.note)` sortiert, bekommt sie vertauscht. Beide Lösungen sind richtig. | In der Musterlösung nach dem ungerundeten Wert sortieren und im Kommentar vermerken, dass beide Reihenfolgen gelten. |
-| VER-F18 | tief | `loesung_u3_1.sql` Kommentar 5b, Partnerübung «Beim Zirkulieren» | `WHERE AVG(...)` ergibt 1111 «Invalid use of group function», keinen Syntaxfehler. Fehler 1055 kommt seltener als erwartet, weil MySQL 8 funktionale Abhängigkeiten erkennt (z. B. `GROUP BY p.fach` mit `f.titel` läuft). | Kommentar auf «Fehler 1111» ändern; für die Dozierenden ein sicheres 1055-Beispiel notieren (nicht gruppierte Spalte wie `name` oder `beginn` bei `GROUP BY YEAR(beginn)`). |
+| VER-F17 | tief | `loesung_u3_1.sql` Aufgabe 6 | Platz 2 und 3 haben gerundet denselben Schnitt. Die Musterlösung sortiert nach dem gerundeten Wert, die Reihenfolge der beiden ist damit zufällig; wer nach dem ungerundeten Durchschnitt sortiert, bekommt sie vertauscht. Beide Lösungen sind richtig. | In der Musterlösung nach dem ungerundeten Wert sortieren und im Kommentar vermerken, dass beide Reihenfolgen gelten. |
+| VER-F18 | tief | `loesung_u3_1.sql` Kommentar 5b, Partnerübung «Beim Zirkulieren» | Ein Aggregat in der WHERE-Klausel ergibt 1111 «Invalid use of group function», keinen Syntaxfehler. Fehler 1055 kommt seltener als erwartet, weil MySQL 8 funktionale Abhängigkeiten erkennt (Gruppieren nach der FK-Spalte und Ausgeben einer Spalte der verbundenen Tabelle läuft ohne Fehler). | Kommentar auf «Fehler 1111» ändern; für die Dozierenden ein sicheres 1055-Beispiel im Drive-Blatt notieren (siehe Tabelle in 4.1). |
 | VER-F19 | tief | Drehbuch U6 und `demo_u6_mysql.py` | Kontrollwert «Risikomanagement» erscheint in der Ausgabe als «Risikomangement». Block 2/3 sortieren nur nach `beginn`, der früheste Zeitpunkt ist doppelt belegt, die erste Zeile kann je Rechner anders sein. Notfallplan: «Unknown database» (1049) sehen nur User mit globalen Rechten, eingeschränkte User sehen 1044. `config_beispiel.py` kennt keinen `port`. | Schreibweise im Drehbuch an die Ausgabe anpassen; `ORDER BY beginn, lehrv_id`; im Notfallplan 1044 ergänzen; optionale Zeile `"port": 3306` in die Vorlage. |
 | VER-F20 | tief | `SQL/create_beispiele.sql` Kopf | 15 Deprecation-Warnungen (utf8 / utf8mb3) bei jedem Import auf 8.0 und 8.4. | `/*!50503 SET NAMES utf8 */` durch `utf8mb4` ersetzen (getestet: 0 Warnungen) oder die Warnungen in der Installationsanleitung ankündigen. |
 | VER-F21 | tief | Wiederholbarkeit: kap-3 Nr. 1, kap-8 Nr. 1/10/12, `demo_u3_views.sql` Nr. 3/7, `index_demo_ablauf.sql` Nr. 4/7/12-14 | Zweite Läufe scheitern mit 1007, 1396, 1050 bzw. 1061. Für TN, die eine Übung wiederholen, sieht das wie ein eigener Fehler aus. | `IF NOT EXISTS`, `CREATE OR REPLACE VIEW`, `DROP USER IF EXISTS` voranstellen; Index-Demo: im Kopf festhalten «vor jeder Durchführung Setup neu laufen lassen». |
